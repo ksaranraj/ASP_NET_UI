@@ -1,0 +1,168 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contribution Rate</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        h2 {
+            font-size: 24px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        input[type="number"] {
+            width: 60px;
+            text-align: center;
+        }
+
+        button {
+            padding: 5px 10px;
+        }
+
+        #continueBtn {
+            margin-top: 20px;
+            padding: 8px 16px;
+        }
+
+        .error-msg {
+            color: red;
+            font-size: 14px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        var stepperValidationStatus = {
+        };
+
+        function adjustValue(id, change) {
+            const input = document.getElementById(id);
+            let val = parseInt(input.value) || 0;
+            val += change;
+            if (val < 0) val = 0;
+            if (val > 100) val = 100;
+            input.value = val;
+            validateInput(id, val, 30);
+        }
+
+        function GetTotal() {
+            let pretax = parseInt(document.getElementById('pretax').value) || 0;
+            let roth = parseInt(document.getElementById('roth').value) || 0;
+            return pretax + roth;
+        }
+
+        function validateInput(aStepperId, aStepperVal, maxVal) {
+            // Individual field validation
+            if (isNaN(aStepperVal) || aStepperVal === "" || aStepperVal > maxVal) {
+                if (!stepperValidationStatus[aStepperId]) {
+                    stepperValidationStatus[aStepperId] = {
+                        hasError: false,
+                        hasTotalError: false
+                    };
+                }
+                stepperValidationStatus[aStepperId].hasError = true;
+                document.getElementById(aStepperId + '_fieldError').style.display = 'inline';
+            } else {
+                if (!stepperValidationStatus[aStepperId]) {
+                    stepperValidationStatus[aStepperId] = {
+                        hasError: false,
+                        hasTotalError: false
+                    };
+                }
+                stepperValidationStatus[aStepperId].hasError = false;
+                document.getElementById(aStepperId + '_fieldError').style.display = 'none';
+            }
+
+            // Total validation
+            var total = GetTotal();
+            if (total > 30) {
+                stepperValidationStatus[aStepperId].hasTotalError = true;
+            } else {
+                stepperValidationStatus[aStepperId].hasTotalError = false;
+            }
+        }
+
+        function validateSetContributionModel() {
+            var hasError = false;
+
+            for (var id in stepperValidationStatus) {
+                if (stepperValidationStatus[id].hasError) {
+                    hasError = true;
+                }
+            }
+
+            if (hasError) {
+                document.getElementById('error').style.display = 'inline';
+                document.getElementById('error').textContent = 'Total contribution cannot exceed 30%.';
+            } else {
+                document.getElementById('error').style.display = 'none';
+                alert("Submitted successfully!");
+                // You can proceed to submit data here
+            }
+        }
+    </script>
+
+    <h2>Your Contribution Rate</h2>
+
+    <div class="section">
+        <div class="label">Pre-tax contribution</div>
+        <div>Current: 11% &nbsp; New:</div>
+        <div class="input-group">
+            <button>-</button>
+            <input type="number" id="pretax" value="0" min="0" max="100" oninput="validateInput('pretax', this.value, 30)" />
+            <span>%</span>
+            <button>+</button>
+        </div>
+        <div id="pretax_fieldError" class="error-msg">Field error</div>
+    </div>
+
+    <div class="section">
+        <div class="label">Roth contribution</div>
+        <div>Current: 2% &nbsp; New:</div>
+        <div class="input-group">
+            <button>-</button>
+            <input type="number" id="roth" value="0" min="0" max="100" oninput="validateInput('roth', this.value, 30)" />
+            <span>%</span>
+            <button>+</button>
+        </div>
+        <div id="roth_fieldError" class="error-msg">Field error</div>
+    </div>
+
+    <div class="section">
+        <div class="label">After</div>
+        <div>Current: 2% &nbsp; New:</div>
+        <div class="input-group">
+            <button>-</button>
+            <input type="number" id="after" value="0" min="0" max="100" oninput="validateInput('after', this.value, 30)" />
+            <span>%</span>
+            <button>+</button>
+        </div>
+        <div id="after_fieldError" class="error-msg">Field error</div>
+    </div>
+
+    <div id="error" class="error-msg">Total contribution cannot exceed 30%</div>
+
+    <button id="continueBtn" onclick="validateSetContributionModel()">Continue</button>
+</body>
+</html>
