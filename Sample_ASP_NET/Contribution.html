@@ -76,7 +76,13 @@
             stepperValidationStatus[aStepperId] = {
                         hasError: false,
                         hasTotalError: false
-                    };
+            };
+            // re-setting dependent stepper hastTotalError value 
+            if (aStepperId == 'pretax' && stepperValidationStatus['roth']) {
+                stepperValidationStatus['roth'].hasTotalError = false;
+            } else if (aStepperId == 'roth' && stepperValidationStatus['pretax']) {
+                stepperValidationStatus['pretax'].hasTotalError = false;
+            }
             // Individual field validation
             if (isNaN(aStepperVal) || aStepperVal === "" || aStepperVal > maxVal) {
                 stepperValidationStatus[aStepperId].hasError = true;
@@ -96,7 +102,7 @@
             var hasError = false;
 
             for (var id in stepperValidationStatus) {
-                if (stepperValidationStatus[id].hasError) {
+                if (stepperValidationStatus[id].hasError || stepperValidationStatus[id].hasTotalError) {
                     hasError = true;
                 }
             }
