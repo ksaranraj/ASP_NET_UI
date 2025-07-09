@@ -73,24 +73,15 @@
         }
 
         function validateInput(aStepperId, aStepperVal, maxVal) {
-            // Individual field validation
-            if (isNaN(aStepperVal) || aStepperVal === "" || aStepperVal > maxVal) {
-                if (!stepperValidationStatus[aStepperId]) {
-                    stepperValidationStatus[aStepperId] = {
+            stepperValidationStatus[aStepperId] = {
                         hasError: false,
                         hasTotalError: false
                     };
-                }
+            // Individual field validation
+            if (isNaN(aStepperVal) || aStepperVal === "" || aStepperVal > maxVal) {
                 stepperValidationStatus[aStepperId].hasError = true;
                 document.getElementById(aStepperId + '_fieldError').style.display = 'inline';
             } else {
-                if (!stepperValidationStatus[aStepperId]) {
-                    stepperValidationStatus[aStepperId] = {
-                        hasError: false,
-                        hasTotalError: false
-                    };
-                }
-                stepperValidationStatus[aStepperId].hasError = false;
                 document.getElementById(aStepperId + '_fieldError').style.display = 'none';
             }
 
@@ -98,8 +89,6 @@
             var total = GetTotal();
             if (total > 30) {
                 stepperValidationStatus[aStepperId].hasTotalError = true;
-            } else {
-                stepperValidationStatus[aStepperId].hasTotalError = false;
             }
         }
 
