@@ -53,6 +53,25 @@
 </head>
 <body>
     <script>
+        const stepperList = [
+          { id: "BTContribID1", types: "BTElection", total: "#TotalElec", subtotal: "#rothPreTotal", ispct: false },
+          { id: "BTContribPct", types: "BTElection", total: "#TotalElec", subtotal: "#rothPreTotal", ispct: true },
+          { id: "BTBonusID1", types: "BTBonusElection", total: "", subtotal: "#bonusTotal", ispct: false },
+          { id: "BTBonusPct", types: "BTBonusElection", total: "", subtotal: "#bonusTotal", ispct: true },
+          { id: "RothContribID1", types: "RothElec", total: "#TotalElec", subtotal: "#rothPreTotal", ispct: false },
+          { id: "RothContribPct", types: "RothElec", total: "#TotalElec", subtotal: "#rothPreTotal", ispct: true },
+          { id: "RothBonusID1", types: "RothBonus", total: "", subtotal: "#bonusTotal", ispct: false },
+          { id: "RothBonusPct", types: "RothBonus", total: "", subtotal: "#bonusTotal", ispct: true },
+          { id: "ATContribID1", types: "AfterTax", total: "#TotalElec", subtotal: "#rothPreTotal", ispct: false },
+          { id: "ATContribPct", types: "AfterTax", total: "#TotalElec", subtotal: "#rothPreTotal", ispct: true },
+          { id: "ATBonusID1", types: "ATaxBonus", total: "", subtotal: "#bonusTotal", ispct: false },
+          { id: "ATBonusPct", types: "ATaxBonus", total: "", subtotal: "#bonusTotal", ispct: true },
+          { id: "BtCucID1", types: "BtCucElection", total: "", subtotal: "#cucTotal", ispct: false },
+          { id: "BtCucPct", types: "BtCucElection", total: "", subtotal: "#cucTotal", ispct: true },
+          { id: "RothCucID1", types: "RothCuc", total: "", subtotal: "#cucTotal", ispct: false },
+          { id: "RothCucPct", types: "RothCuc", total: "", subtotal: "#cucTotal", ispct: true }
+        ];
+
         var stepperValidationStatus = {
         };
 
@@ -67,9 +86,10 @@
         }
 
         function GetTotal() {
-            let pretax = parseInt(document.getElementById('pretax').value) || 0;
-            let roth = parseInt(document.getElementById('roth').value) || 0;
-            return pretax + roth;
+            let pretax = parseInt(document.getElementById('BTContribPct').value) || 0;
+            let roth = parseInt(document.getElementById('RothContribPct').value) || 0;
+            let afterTax = parseInt(document.getElementById('ATContribPct').value) || 0;
+            return pretax + roth + afterTax;
         }
 
         function validateInput(aStepperId, aStepperVal, maxVal) {
@@ -77,12 +97,14 @@
                         hasError: false,
                         hasTotalError: false
             };
-            // re-setting dependent stepper hastTotalError value 
-            if (aStepperId == 'pretax' && stepperValidationStatus['roth']) {
-                stepperValidationStatus['roth'].hasTotalError = false;
-            } else if (aStepperId == 'roth' && stepperValidationStatus['pretax']) {
-                stepperValidationStatus['pretax'].hasTotalError = false;
+
+            //reset hasTotalError of other stepper
+            for (var item in stepperList) {
+                if (stepperList[item].id != aStepperId && stepperValidationStatus[stepperList[item].id]) {
+                    stepperValidationStatus[stepperList[item].id].hasTotalError = false;
+                }
             }
+            
             // Individual field validation
             if (isNaN(aStepperVal) || aStepperVal === "" || aStepperVal > maxVal) {
                 stepperValidationStatus[aStepperId].hasError = true;
@@ -125,11 +147,11 @@
         <div>Current: 11% &nbsp; New:</div>
         <div class="input-group">
             <button>-</button>
-            <input type="number" id="pretax" value="0" min="0" max="100" oninput="validateInput('pretax', this.value, 30)" />
+            <input type="number" id="BTContribPct" value="0" min="0" max="100" oninput="validateInput(this.id, this.value, 30)" />
             <span>%</span>
             <button>+</button>
         </div>
-        <div id="pretax_fieldError" class="error-msg">Field error</div>
+        <div id="BTContribPct_fieldError" class="error-msg">Field error</div>
     </div>
 
     <div class="section">
@@ -137,11 +159,11 @@
         <div>Current: 2% &nbsp; New:</div>
         <div class="input-group">
             <button>-</button>
-            <input type="number" id="roth" value="0" min="0" max="100" oninput="validateInput('roth', this.value, 30)" />
+            <input type="number" id="RothContribPct" value="0" min="0" max="100" oninput="validateInput(this.id, this.value, 30)" />
             <span>%</span>
             <button>+</button>
         </div>
-        <div id="roth_fieldError" class="error-msg">Field error</div>
+        <div id="RothContribPct_fieldError" class="error-msg">Field error</div>
     </div>
 
     <div class="section">
@@ -149,11 +171,11 @@
         <div>Current: 2% &nbsp; New:</div>
         <div class="input-group">
             <button>-</button>
-            <input type="number" id="after" value="0" min="0" max="100" oninput="validateInput('after', this.value, 30)" />
+            <input type="number" id="ATContribPct" value="0" min="0" max="100" oninput="validateInput(this.id, this.value, 30)" />
             <span>%</span>
             <button>+</button>
         </div>
-        <div id="after_fieldError" class="error-msg">Field error</div>
+        <div id="ATContribPct_fieldError" class="error-msg">Field error</div>
     </div>
 
     <div id="error" class="error-msg">Total contribution cannot exceed 30%</div>
