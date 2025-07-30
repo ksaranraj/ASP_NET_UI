@@ -11,7 +11,7 @@ namespace Sample_ASP_NET
 {
 
 
-    public partial class AddSpecificParticipantSelection
+    public partial class AddParticipants
     {
 
         /// <summary>
@@ -24,12 +24,21 @@ namespace Sample_ASP_NET
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
 
         /// <summary>
-        /// btnAdd control.
+        /// ParticipantsGrid control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnAdd;
+        protected global::System.Web.UI.WebControls.GridView ParticipantsGrid;
+
+        /// <summary>
+        /// btnIncludeParticipants control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnIncludeParticipants;
     }
 }
